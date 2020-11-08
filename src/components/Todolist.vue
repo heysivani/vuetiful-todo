@@ -22,6 +22,7 @@
                     v-model="todo.text"
                     @blur="submitEdit(todo)"
                     @keyup.enter="submitEdit(todo)"
+                    @keyup.escape="cancelEdit(todo)"
                     v-focus />
             </div>
             <div 
@@ -37,22 +38,24 @@
 export default {
   name: 'TodoList',
   data: function () {
-      return {newTask: '',
-      todos: [
-          {
-              'id': 1,
-              'text': 'finish this app!',
-              'completed': false,
-              'editing': false
-          },
-          {
-              'id': 2,
-              'text': 'GO HOME',
-              'completed': false,
-              'editing': false
-          }
-      ],
-      taskID: 3,
+      return {
+            newTask: '',
+            beforeEditCache: '',
+            todos: [
+                {
+                    'id': 1,
+                    'text': 'finish this app!',
+                    'completed': false,
+                    'editing': false
+                },
+                {
+                    'id': 2,
+                    'text': 'GO HOME',
+                    'completed': false,
+                    'editing': false
+                }
+            ],
+            taskID: 3,
     }
   },
   directives: {
@@ -65,7 +68,7 @@ export default {
   },
   methods: {
       addTask () {
-          if(this.newTask.trim().length === 0) {
+          if(this.newTask.trim() === '') {
               return;
           }
 
@@ -86,9 +89,18 @@ export default {
           console.log("updated todos ", this.todos);
       },
       editTask (task) {
+          this.beforeEditCache = task.text;
           task.editing = true;
       },
       submitEdit (task) {
+          if(task.text.trim() === '') {
+              task.text = this.beforeEditCache;
+          }
+
+          task.editing = false;
+      },
+      cancelEdit (task) {
+          task.text = this.beforeEditCache;
           task.editing = false;
       }
   },
