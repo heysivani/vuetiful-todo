@@ -21,7 +21,8 @@
                     type="text" 
                     v-model="todo.text"
                     @blur="submitEdit(todo)"
-                    @keyup.enter="submitEdit(todo)"/>
+                    @keyup.enter="submitEdit(todo)"
+                    v-focus />
             </div>
             <div 
                 class="remove-item"
@@ -52,6 +53,14 @@ export default {
           }
       ],
       taskID: 3,
+    }
+  },
+  directives: {
+    focus: {
+        // directive definition
+        inserted: function (el) {
+        el.focus()
+        }
     }
   },
   methods: {
