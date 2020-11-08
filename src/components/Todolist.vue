@@ -9,9 +9,11 @@
             @keyup.enter="addTask">
         <div v-for="(todo, index) in todos" :key="todo.id" class="todo-item"> 
             <div class="todo-item-left"> 
+                <input type="checkbox" v-model="todo.completed"/>
                 <div 
                     v-if="!todo.editing"
                     class="todo-item-label"
+                    :class="{ completed : todo.completed }"
                     @dblclick="editTask(todo)"> 
                     {{ todo.text }} 
                 </div>
@@ -158,6 +160,11 @@ export default {
     &:focus {
         outline: none;
     }
+}
+
+.completed {
+    text-decoration: line-through;
+    color: pink;
 }
 
 </style>
