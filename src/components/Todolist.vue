@@ -9,7 +9,7 @@
             @keyup.enter="addTask">
         <div v-for="(todo, index) in todos" :key="todo.id" class="todo-item"> 
             <div class="todo-item-left"> 
-                <input type="checkbox" v-model="todo.completed"/>
+                <input type="checkbox" v-model="todo.completed">
                 <div 
                     v-if="!todo.editing"
                     class="todo-item-label"
@@ -31,6 +31,20 @@
                 class="remove-item"
                 @click="removeTask(index)">
                 &times;
+            </div>
+        </div>
+        <div class="extra-container">
+            <div>
+                <label>
+                    <input type="checkbox"
+                    :checked="!anyRemaining" 
+                    @change="checkAllTasks"
+                    >
+                    check all items
+                </label>
+            </div>
+            <div> 
+                {{ remaining }} items left
             </div>
         </div>
     </div>
@@ -59,6 +73,14 @@ export default {
             ],
             taskID: 3,
     }
+  },
+  computed: {
+      remaining() {
+          return this.todos.filter(todo => !todo.completed).length;
+      },
+      anyRemaining() {
+          return this.remaining != 0;
+      }
   },
   directives: {
     focus: {
@@ -104,6 +126,9 @@ export default {
       cancelEdit (task) {
           task.text = this.beforeEditCache;
           task.editing = false;
+      },
+      checkAllTasks (event) {
+          this.todos.forEach((todo) => todo.completed = event.target.checked);
       }
   },
   props: {
@@ -165,6 +190,34 @@ export default {
 .completed {
     text-decoration: line-through;
     color: pink;
+}
+
+.extra-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 16px;
+    border-top: 1px solid lightcyan;
+    padding-top: 14px;
+    margin-bottom: 14px;
+}
+
+button {
+    font-size: 14px;
+    background-color: white;
+    appearance: none;
+
+    &:hover {
+        background: lightgoldenrodyellow;
+    }
+
+    &:focus {
+        outline: none;
+    }
+}
+
+.active {
+    background: plum;
 }
 
 </style>
